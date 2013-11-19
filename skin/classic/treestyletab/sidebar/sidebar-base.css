@@ -50,6 +50,24 @@
 	display: none !important;
 }
 
+/* Disable pseudo elements introduced by Australis */
+.tabbrowser-tabs:not([treestyletab-tabbar-position="top"])
+  .tab-background-start::before,
+.tabbrowser-tabs:not([treestyletab-tabbar-position="top"])
+  .tab-background-start::after,
+.tabbrowser-tabs:not([treestyletab-tabbar-position="top"])
+  .tab-background-end::before,
+.tabbrowser-tabs:not([treestyletab-tabbar-position="top"])
+  .tab-background-end::after {
+	display: none !important;
+}
+.tabbrowser-tabs:not([treestyletab-tabbar-position="top"])
+  :-moz-any(.tab-background-start,
+            .tab-background-end) {
+  min-height: 0;
+  width: 0;
+}
+
 /* Use the splitter to display the border of .tabbrowser-strip */
 tabbrowser[treestyletab-mode="vertical"]
   .treestyletab-splitter,

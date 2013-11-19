@@ -444,28 +444,10 @@ TreeStyleTabWindow.prototype = {
 		if (!utils.getTreePref('enableSubtreeIndent.allTabsPopup'))
 			return;
 
-		var items = Array.slice(aEvent.originalTarget.childNodes);
-		var firstItemIndex = 0;
-		// ignore menu items inserted by Weave (Firefox Sync), Tab Utilities, and others.
-		for (let i = 0, maxi = items.length; i < maxi; i++)
-		{
-			let item = items[i];
-			if (
-				item.getAttribute('anonid') ||
-				item.id ||
-				item.hidden ||
-				item.localName != 'menuitem'
-				)
-				firstItemIndex = i + 1;
-		}
-		items = items.slice(firstItemIndex);
-
-		var b = this.getTabBrowserFromChild(aEvent.originalTarget) || this.browser;
-		var tabs = this.getTabs(b);
-		for (let i = 0, maxi = tabs.length; i < maxi; i++)
-		{
-			items[i].style.marginLeft = tabs[i].getAttribute(this.kNEST)+'em';
-		}
+		Array.forEach(aEvent.originalTarget.childNodes, function(aItem) {
+			if (aItem.classList.contains('alltabs-item') && 'tab' in aItem)
+				aItem.style.marginLeft = aItem.tab.getAttribute(this.kNEST) + 'em';
+		}, this);
 	},
  
 	initUIShowHideObserver : function TSTWindow_initUIShowHideObserver() 
@@ -1024,38 +1006,41 @@ TreeStyleTabWindow.prototype = {
  
 	updateTabsOnTop : function TSTWindow_updateTabsOnTop() 
 	{
-		var w = this.window;
 		if (
 			this.isPopupWindow ||
 			this.tabsOnTopChangingByUI ||
-			this.tabsOnTopChangingByTST ||
-			!('TabsOnTop' in w) ||
-			!('enabled' in w.TabsOnTop)
+			this.tabsOnTopChangingByTST
 			)
 			return;
+
+		var TabsOnTop = this.window.TabsOnTop;
+		var TabsInTitlebar = this.window.TabsInTitlebar;
+		var isTopTabbar = this.browser.treeStyleTab.position == 'top';
 
 		this.tabsOnTopChangingByTST = true;
 
 		try {
-			var TabsOnTop = w.TabsOnTop;
-			var originalState = utils.getTreePref('tabsOnTop.originalState');
-			if (originalState === null) {
-				let current = prefs.getDefaultPref('browser.tabs.onTop') === null ?
-								TabsOnTop.enabled :
-								prefs.getPref('browser.tabs.onTop') ;
-				utils.setTreePref('tabsOnTop.originalState', originalState = current);
-			}
+			if (TabsOnTop) {
+				let originalState = utils.getTreePref('tabsOnTop.originalState');
+				if (originalState === null) {
+					let current = prefs.getDefaultPref('browser.tabs.onTop') === null ?
+									TabsOnTop.enabled :
+									prefs.getPref('browser.tabs.onTop') ;
+					utils.setTreePref('tabsOnTop.originalState', originalState = current);
+				}
 
-			if (this.browser.treeStyleTab.position != 'top' ||
-				!this.browser.treeStyleTab.fixed) {
-				if (TabsOnTop.enabled)
-					TabsOnTop.enabled = false;
+				if (!isTopTabbar || !this.browser.treeStyleTab.fixed) {
+					if (TabsOnTop.enabled)
+						TabsOnTop.enabled = false;
+				}
+				else {
+					if (TabsOnTop.enabled != originalState)
+						TabsOnTop.enabled = originalState;
+					utils.clearTreePref('tabsOnTop.originalState');
+				}
 			}
-			else {
-				if (TabsOnTop.enabled != originalState)
-					TabsOnTop.enabled = originalState;
-				utils.clearTreePref('tabsOnTop.originalState');
-			}
+			if (TabsInTitlebar)
+				TabsInTitlebar.allowedBy('TreeStyleTab', isTopTabbar);
 		}
 		finally {
 			this.tabsOnTopChangingByTST = false;

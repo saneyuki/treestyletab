@@ -42,7 +42,7 @@ const Cu = Components.utils;
 
 Cu.import('resource://gre/modules/XPCOMUtils.jsm');
 Cu.import('resource://gre/modules/Services.jsm');
-Cu.import("resource://gre/modules/Timer.jsm");
+Cu.import('resource://gre/modules/Timer.jsm');
 Cu.import('resource://treestyletab-modules/constants.js');
 
 XPCOMUtils.defineLazyGetter(this, 'window', function() {
@@ -72,12 +72,15 @@ XPCOMUtils.defineLazyModuleGetter(this, 'Deferred',
 XPCOMUtils.defineLazyModuleGetter(this, 'confirmWithPopup', 'resource://treestyletab-modules/lib/confirmWithPopup.js');
 XPCOMUtils.defineLazyModuleGetter(this, 'utils', 'resource://treestyletab-modules/utils.js', 'TreeStyleTabUtils');
 
-XPCOMUtils.defineLazyModuleGetter(this, 'SessionStore',
-	'resource:///modules/sessionstore/SessionStore.jsm');
+XPCOMUtils.defineLazyServiceGetter(this, 'SessionStore',
+  '@mozilla.org/browser/sessionstore;1', 'nsISessionStore');
 
 if (Services.appinfo.OS === 'WINNT') {
 	XPCOMUtils.defineLazyModuleGetter(this, 'AeroPeek',
-	  'resource://gre/modules/WindowsPreviewPerTab.jsm', 'AeroPeek');
+	  'resource:///modules/WindowsPreviewPerTab.jsm', 'AeroPeek');
+}
+else {
+	this.AeroPeek = null;
 }
  
 var TreeStyleTabBase = { 
