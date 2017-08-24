@@ -5,6 +5,8 @@
 */
 'use strict';
 
+import { positionPinnedTabs } from 'pinned-tabs.js';
+
 gLogContext = 'Sidebar';
 
 var gTabBar;

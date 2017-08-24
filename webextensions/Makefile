@@ -24,5 +24,5 @@ xpi: ../extlib/fxaddonlib-inherit/inherit.jsm ../extlib/webextensions-lib-config
 ../extlib/JavaScript-MD5/js/md5.min.js:
 	cd .. && git submodule update --init
 
-./sidebar/bundled.js: ./sidebar/sidebar.js
+./sidebar/bundled.js: ./sidebar/sidebar.js ./sidebar/pinned-tabs.js
 	../node_modules/.bin/rollup ./sidebar/sidebar.js --config ../rollup.config.js --output.file $@ --output.format iife

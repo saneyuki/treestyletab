@@ -38,7 +38,7 @@
  * ***** END LICENSE BLOCK ******/
 'use strict';
 
-function positionPinnedTabs(aParams = {}) {
+export function positionPinnedTabs(aParams = {}) {
   log('positionPinnedTabs');
   var pinnedTabs = getPinnedTabs(gTargetWindow);
   if (!pinnedTabs.length) {
@@ -102,7 +102,7 @@ function positionPinnedTabs(aParams = {}) {
   }
 }
 
-function reserveToPositionPinnedTabs(aParams) {
+export function reserveToPositionPinnedTabs(aParams) {
   if (reserveToPositionPinnedTabs.waiting)
     return;
   reserveToPositionPinnedTabs.waiting = setTimeout(() => {
@@ -110,6 +110,7 @@ function reserveToPositionPinnedTabs(aParams) {
     positionPinnedTabs(aParams);
   }, 0);
 }
+window.reserveToPositionPinnedTabs = reserveToPositionPinnedTabs;// FIXME: for compat with classic source type
 
 function resetPinnedTabs(aHint) {
   gTabBar.style.marginTop = '';
@@ -117,10 +118,11 @@ function resetPinnedTabs(aHint) {
   pinnedTabs.forEach(clearPinnedStyle);
 }
 
-function clearPinnedStyle(aTab) {
+export function clearPinnedStyle(aTab) {
   let style = aTab.style;
   style.maxWidth = style.width =
     style.maxHeight = style.height =
     style.left = style.right =
     style.marginLeft = style.marginRight = style.marginTop = '';
 }
+window.clearPinnedStyle = clearPinnedStyle;// FIXME: for compat with classic source type
