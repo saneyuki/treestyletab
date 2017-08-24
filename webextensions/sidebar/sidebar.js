@@ -5,7 +5,14 @@
 */
 'use strict';
 
-import { positionPinnedTabs } from 'pinned-tabs.js';
+import {
+  onClick,
+  onConfigChange,
+  onDblClick,
+  onMouseDown,
+  onResize,
+} from './handlers.js';
+import { positionPinnedTabs } from './pinned-tabs.js';
 
 gLogContext = 'Sidebar';
 

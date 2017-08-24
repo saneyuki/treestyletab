@@ -38,6 +38,11 @@
  * ***** END LICENSE BLOCK ******/
 'use strict';
 
+import {
+  reserveToPositionPinnedTabs,
+  clearPinnedStyle
+} from './pinned-tabs.js';
+
 function isAccelAction(aEvent) {
   return aEvent.button == 1 || (aEvent.button == 0 && isAccelKeyPressed(aEvent));
 }
@@ -96,15 +101,16 @@ function isEventFiredOnNewTabButton(aEvent) {
     ).booleanValue;
 }
 
-function isEventFiredOnClickable(aEvent) {
+export function isEventFiredOnClickable(aEvent) {
   return evaluateXPath(
       'ancestor-or-self::*[contains(" button scrollbar textbox ", concat(" ", local-name(), " "))]',
       aEvent.originalTarget || aEvent.target,
       XPathResult.BOOLEAN_TYPE
     ).booleanValue;
 }
+window.isEventFiredOnClickable = isEventFiredOnClickable; // FIXME: compat with classic source type.
 
-function isEventFiredOnScrollbar(aEvent) {
+export function isEventFiredOnScrollbar(aEvent) {
   return evaluateXPath(
       'ancestor-or-self::*[local-name()="scrollbar" or local-name()="nativescrollbar"]',
       aEvent.originalTarget || aEvent.target,
@@ -112,7 +118,7 @@ function isEventFiredOnScrollbar(aEvent) {
     ).booleanValue;
 }
 
-function isTabInViewport(aTab) {
+export function isTabInViewport(aTab) {
   if (!aTab)
     return false;
 
@@ -127,12 +133,13 @@ function isTabInViewport(aTab) {
     containerRect.bottom <= barBox.bottom
   );
 }
+window.isTabInViewport = isTabInViewport; // FIXME: compat with classic source type.
 
-function onResize(aEvent) {
+export function onResize(aEvent) {
   reserveToUpdateTabbarLayout();
 }
 
-function onMouseDown(aEvent) {
+export function onMouseDown(aEvent) {
   var tab = getTabFromEvent(aEvent);
   if (isAccelAction(aEvent)) {
     if (tab/* && warnAboutClosingTabSubtreeOf(tab)*/) {
@@ -185,7 +192,7 @@ function onMouseDown(aEvent) {
   });
 }
 
-function onClick(aEvent) {
+export function onClick(aEvent) {
   if (isEventFiredOnNewTabButton(aEvent)) {
     aEvent.stopPropagation();
     aEvent.preventDefault();
@@ -221,7 +228,7 @@ function handleNewTabAction(aEvent) {
   });
 }
 
-function onDblClick(aEvent) {
+export function onDblClick(aEvent) {
   if (isEventFiredOnNewTabButton(aEvent) ||
       getTabFromEvent(aEvent))
     return;
@@ -232,7 +239,7 @@ function onDblClick(aEvent) {
 }
 
 
-function onConfigChange(aChangedKey) {
+export function onConfigChange(aChangedKey) {
   switch (aChangedKey) {
     case 'debug':
       if (configs.debug)
@@ -244,7 +251,7 @@ function onConfigChange(aChangedKey) {
 
 // raw event handlers
 
-function onTabBuilt(aTab) {
+export function onTabBuilt(aTab) {
   var label = getTabLabel(aTab);
 
   var twisty = document.createElement('span');
@@ -267,11 +274,13 @@ function onTabBuilt(aTab) {
   closebox.classList.add(kCLOSEBOX);
   aTab.appendChild(closebox);
 }
+window.onTabBuilt = onTabBuilt; // FIXME: compat with classic source type.
 
-function onTabFaviconUpdated(aTab, aURL) {
+export function onTabFaviconUpdated(aTab, aURL) {
   let favicon = getTabFavicon(aTab);
   loadImageTo(favicon.firstChild, aURL);
 }
+window.onTabFaviconUpdated = onTabFaviconUpdated; // FIXME: compat with classic source type.
 
 async function loadImageTo(aImageElement, aURL) {
   aImageElement.src = '';
@@ -304,7 +313,7 @@ async function loadImageTo(aImageElement, aURL) {
     loader.src = aURL;
 }
 
-function onTabOpening(aTab) {
+export function onTabOpening(aTab) {
   if (configs.animation) {
     onTabCollapsedStateChanging(aTab, {
       collapsed: true,
@@ -329,16 +338,19 @@ function onTabOpening(aTab) {
     scrollToNewTab(aTab);
   }
 }
+window.onTabOpening = onTabOpening; // FIXME: compat with classic source type.
 
-function onTabOpened(aTab) {
+export function onTabOpened(aTab) {
   reserveToUpdateTabbarLayout();
 }
+window.onTabOpened = onTabOpened; // FIXME: compat with classic source type.
 
-function onTabClosed(aTab) {
+export function onTabClosed(aTab) {
   reserveToUpdateTabbarLayout();
 }
+window.onTabClosed = onTabClosed; // FIXME: compat with classic source type.
 
-async function onTabCompletelyClosed(aTab) {
+export async function onTabCompletelyClosed(aTab) {
   if (!configs.animation)
     return;
 
@@ -358,12 +370,14 @@ async function onTabCompletelyClosed(aTab) {
     }, configs.collapseDuration);
   });
 }
+window.onTabCompletelyClosed = onTabCompletelyClosed; // FIXME: compat with classic source type.
 
-function onTabMoved(aTab) {
+export function onTabMoved(aTab) {
   reserveToUpdateTabbarLayout();
 }
+window.onTabMoved = onTabMoved; // FIXME: compat with classic source type.
 
-function onTabLevelChanged(aTab) {
+export function onTabLevelChanged(aTab) {
   var baseIndent = gIndent;
   if (gIndent < 0)
     baseIndent = configs.baseIndent;
@@ -377,8 +391,9 @@ function onTabLevelChanged(aTab) {
     }
   });
 }
+window.onTabLevelChanged = onTabLevelChanged; // FIXME: compat with classic source type.
 
-function onTabCollapsedStateChanging(aTab, aInfo = {}) {
+export function onTabCollapsedStateChanging(aTab, aInfo = {}) {
   var collapsed = aInfo.collapsed;
 
   //log('updateTabCollapsed ', dumpTab(aTab));
@@ -478,6 +493,7 @@ function onTabCollapsedStateChanging(aTab, aInfo = {}) {
     aTab.style.opacity   = endOpacity;
   });
 }
+window.onTabCollapsedStateChanging = onTabCollapsedStateChanging; // FIXME: compat with classic source type.
 
 function onExpandedTreeReadyToScroll(aEvent) {
   //scrollToTabSubtree(aEvent.target);
@@ -529,7 +545,7 @@ function onTabSubtreeCollapsedStateChangedManually(aEvent) {
 }
 */
 
-function onTabPinned(aTab) {
+export function onTabPinned(aTab) {
   collapseExpandSubtree(aTab, { collapsed: false });
   detachAllChildren(aTab, {
     behavior: getCloseParentBehaviorForTab(
@@ -541,9 +557,11 @@ function onTabPinned(aTab) {
   collapseExpandTab(aTab, { collapsed: false });
   reserveToPositionPinnedTabs();
 }
+window.onTabPinned = onTabPinned; // FIXME: compat with classic source type.
 
-function onTabUnpinned(aTab) {
+export function onTabUnpinned(aTab) {
   clearPinnedStyle(aTab);
   //updateInvertedTabContentsOrder(aTab);
   reserveToPositionPinnedTabs();
 }
+window.onTabUnpinned = onTabUnpinned; // FIXME: compat with classic source type.

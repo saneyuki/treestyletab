@@ -110,7 +110,6 @@ export function reserveToPositionPinnedTabs(aParams) {
     positionPinnedTabs(aParams);
   }, 0);
 }
-window.reserveToPositionPinnedTabs = reserveToPositionPinnedTabs;// FIXME: for compat with classic source type
 
 function resetPinnedTabs(aHint) {
   gTabBar.style.marginTop = '';
@@ -125,4 +124,3 @@ export function clearPinnedStyle(aTab) {
     style.left = style.right =
     style.marginLeft = style.marginRight = style.marginTop = '';
 }
-window.clearPinnedStyle = clearPinnedStyle;// FIXME: for compat with classic source type
