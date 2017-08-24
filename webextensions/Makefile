@@ -1,4 +1,4 @@
-.PHONY: xpi
+.PHONY: xpi lint
 
 xpi: ../extlib/fxaddonlib-inherit/inherit.jsm ../extlib/webextensions-lib-configs/Configs.js ../extlib/webextensions-lib-options/Options.js ../extlib/webextensions-lib-l10n/l10n.js ../extlib/JavaScript-MD5/js/md5.min.js ./sidebar/bundled.js
 	cd .. && git submodule update
@@ -26,3 +26,6 @@ xpi: ../extlib/fxaddonlib-inherit/inherit.jsm ../extlib/webextensions-lib-config
 
 ./sidebar/bundled.js: ./sidebar/sidebar.js ./sidebar/pinned-tabs.js ./sidebar/handlers.js
 	../node_modules/.bin/rollup ./sidebar/sidebar.js --config ../rollup.config.js --output.file $@ --output.format iife
+
+lint:
+	../node_modules/.bin/eslint ./sidebar --ext=js

@@ -10,7 +10,7 @@ import {
   onConfigChange,
   onDblClick,
   onMouseDown,
-  onResize,
+  onResize
 } from './handlers.js';
 import { positionPinnedTabs } from './pinned-tabs.js';
 
