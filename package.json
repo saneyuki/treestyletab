@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/piroor/treestyletab/issues"
   },
-  "homepage": "https://github.com/piroor/treestyletab#readme"
+  "homepage": "https://github.com/piroor/treestyletab#readme",
+  "devDependencies": {
+    "rollup": "^0.48.2"
+  }
 }
