@@ -14,7 +14,7 @@ signed: xpi
 	makexpi/sign_xpi.sh -k $(JWT_KEY) -s $(JWT_SECRET) -p ./$(PACKAGE_NAME)_noupdate.xpi
 
 clean:
-	rm $(PACKAGE_NAME).xpi $(PACKAGE_NAME)_noupdate.xpi sha1hash.txt
+	rm $(PACKAGE_NAME).xpi $(PACKAGE_NAME)_noupdate.xpi sha1hash.txt ./webextensions/sidebar/bundled.js ./webextensions/sidebar/bundled.js.map
 
 install_rollip:
 	npm install

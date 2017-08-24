@@ -1,6 +1,6 @@
 .PHONY: xpi
 
-xpi: ../extlib/fxaddonlib-inherit/inherit.jsm ../extlib/webextensions-lib-configs/Configs.js ../extlib/webextensions-lib-options/Options.js ../extlib/webextensions-lib-l10n/l10n.js ../extlib/JavaScript-MD5/js/md5.min.js
+xpi: ../extlib/fxaddonlib-inherit/inherit.jsm ../extlib/webextensions-lib-configs/Configs.js ../extlib/webextensions-lib-options/Options.js ../extlib/webextensions-lib-l10n/l10n.js ../extlib/JavaScript-MD5/js/md5.min.js ./sidebar/bundled.js
 	cd .. && git submodule update
 	cp ../extlib/fxaddonlib-inherit/inherit.jsm common/
 	cp ../extlib/webextensions-lib-configs/Configs.js common/
@@ -24,3 +24,5 @@ xpi: ../extlib/fxaddonlib-inherit/inherit.jsm ../extlib/webextensions-lib-config
 ../extlib/JavaScript-MD5/js/md5.min.js:
 	cd .. && git submodule update --init
 
+./sidebar/bundled.js: ./sidebar/sidebar.js
+	../node_modules/.bin/rollup ./sidebar/sidebar.js --config ../rollup.config.js --output.file $@ --output.format iife
