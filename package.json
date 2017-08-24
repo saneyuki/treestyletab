@@ -1,0 +1,22 @@
+{
+  "name": "treestyletab",
+  "version": "0.0.0",
+  "description": "This is an addon for Firefox providing tree-like appearance for the tab bar.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/piroor/treestyletab.git"
+  },
+  "author": "",
+  "license": "(MPL-1.1 OR GPL-2.0 OR LGPL-2.0)",
+  "bugs": {
+    "url": "https://github.com/piroor/treestyletab/issues"
+  },
+  "homepage": "https://github.com/piroor/treestyletab#readme"
+}
