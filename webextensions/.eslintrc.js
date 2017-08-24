@@ -17,10 +17,12 @@ module.exports = {
 
     'env': {
         'es6': true,
+        'webextensions': true,
     },
 
     'root': true,
 
     'rules': {
+        'no-undef': 'error',
     }
 };
